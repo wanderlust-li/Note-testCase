@@ -1,0 +1,58 @@
+@page "/notes"
+@using Notes.Web.Models.DTO
+@using Notes.Web.Services.IServices
+@inject INoteService NoteService
+
+<div class="container mt-3">
+    <div class="d-flex justify-content-between mb-3">
+        <h1>Notes</h1>
+        <button class="btn btn-success">New note</button>
+    </div>
+
+    <input type="text" class="form-control mb-3" placeholder="Enter search term">
+
+    <div class="list-group">
+        @if (notes == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            @foreach (var note in notes)
+            {
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@note.Title</h5>
+                        <small>Created @note.DateCreated.Value.Day day ago</small>
+                    </div>
+                    <p class="mb-1">@note.Content</p>
+                    <div class="btn-group mt-2">
+                        <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseDetails-@note.Id">
+                            View note
+                        </button>
+                        <button class="btn btn-secondary btn-sm">Edit note</button>
+                    </div>
+                    <div id="collapseDetails-@note.Id" class="collapse">
+                        <div class="card card-body">
+                            @note.Content
+                            <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseDetails-@note.Id">Hide</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="mt-3">
+        <span>Total notes: @notes?.Count</span>
+    </div>
+</div>
+
+@code {
+    private List<NoteDTO> notes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        notes = await NoteService.GetAllAsync<List<NoteDTO>>();
+    }
+}
