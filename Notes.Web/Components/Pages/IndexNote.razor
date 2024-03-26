@@ -1,12 +1,15 @@
 @page "/notes"
 @using Notes.Web.Models.DTO
 @using Notes.Web.Services.IServices
+@inject NavigationManager NavigationManager
 @inject INoteService NoteService
 
 <div class="container mt-3">
     <div class="d-flex justify-content-between mb-3">
         <h1>Notes</h1>
-        <button class="btn btn-success">New note</button>
+        <NavLink href="createnote">
+            <button class="btn btn-success">New note</button>
+        </NavLink>
     </div>
 
     <input type="text" class="form-control mb-3" placeholder="Enter search term">
@@ -25,7 +28,7 @@
                         <h5 class="mb-1">@note.Title</h5>
                         <small>Created @note.DateCreated.Value.Day day ago</small>
                     </div>
-                    <p class="mb-1">@note.Content</p>
+                    @*<p class="mb-1">@note.Content</p>*@
                     <div class="btn-group mt-2">
                         <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseDetails-@note.Id">
                             View note
@@ -55,4 +58,5 @@
     {
         notes = await NoteService.GetAllAsync<List<NoteDTO>>();
     }
+    
 }
